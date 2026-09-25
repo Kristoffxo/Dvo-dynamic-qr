@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RENDVO — Plan is the First Move</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --surface: #161616;
+      --card: #1c1c1c;
+      --card-hover: #222222;
+      --border: #2a2a2a;
+      --text: #f2ece3;
+      --text-muted: #8a8278;
+      --text-dim: #555;
+      --accent: #c93c1e;
+      --accent-hover: #e0471f;
+      --accent-soft: rgba(201, 60, 30, 0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      background: rgba(11, 11, 11, 0.85);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .logo span { color: var(--accent); }
+
+    .nav-tagline {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .nav-sign-in {
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border: 1px solid var(--border);
+      padding: 7px 18px;
+      border-radius: 50px;
+      transition: all 0.2s;
+      background: none;
+    }
+    .nav-sign-in:hover { color: var(--text); border-color: var(--text-muted); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(201, 60, 30, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(44px, 7vw, 86px);
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--text);
+      max-width: 720px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .hero-sub {
+      margin-top: 24px;
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 420px;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      margin-top: 44px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    .btn-ghost {
+      background: none;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--text-muted); }
+
+    .scroll-hint {
+      margin-top: 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .scroll-hint svg { opacity: 0.4; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* ── SECTION HEADER ── */
+    .section {
+      padding: 80px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+    }
+
+    /* ── VENUES ── */
+    .venues-wrapper {
+      overflow-x: auto;
+      padding-bottom: 16px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+      cursor: grab;
+    }
+    .venues-wrapper:active { cursor: grabbing; }
+    .venues-wrapper::-webkit-scrollbar { height: 4px; }
+    .venues-wrapper::-webkit-scrollbar-track { background: transparent; }
+    .venues-wrapper::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .venues-track {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+      padding: 4px 2px 8px;
+    }
+
+    .venue-card {
+      width: 300px;
+      flex-shrink: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .venue-card:hover { border-color: #3a3a3a; transform: translateY(-2px); }
+
+    .venue-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      background: var(--surface);
+      position: relative;
+    }
+
+    .venue-img-placeholder {
+      width: 100%;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .venue-img-placeholder svg {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      width: 100%;
+    }
+
+    .venue-tag {
+      position: absolute;
+      top: 14px; left: 14px;
+      background: rgba(11, 11, 11, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-muted);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 50px;
+    }
+
+    .edit-btn {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: rgba(11,11,11,0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      border-radius: 50px;
+      padding: 4px 10px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(6px);
+    }
+    .edit-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+
+    .venue-body {
+      padding: 20px;
+    }
+
+    .venue-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 14px;
+      outline: none;
+    }
+    .venue-name[contenteditable="true"] {
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 4px;
+    }
+    .venue-name[contenteditable="true"]:focus {
+      border-color: var(--accent);
+    }
+
+    .venue-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 20px;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .meta-row svg { flex-shrink: 0; opacity: 0.6; }
+
+    .meta-editable {
+      outline: none;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 13px;
+      cursor: text;
+      width: 100%;
+    }
+    .meta-editable:focus { color: var(--text); }
+
+    .spots-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      padding: 3px 10px;
+      border-radius: 50px;
+      border: 1px solid rgba(201, 60, 30, 0.2);
+    }
+
+    .venue-footer {
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .want-in-btn {
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .want-in-btn:hover { background: #e8e0d4; }
+
+    .arrow-icon {
+      width: 32px; height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+    }
+
+    .step-num {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .step-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── JOIN THE PLAN ── */
+    .join-section {
+      padding: 80px 24px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .join-inner {
+      max-width: 560px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .join-inner .section-label { display: block; margin-bottom: 12px; }
+
+    .join-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .join-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+
+    .join-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-field {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .form-field::placeholder { color: var(--text-dim); }
+    .form-field:focus { border-color: var(--accent); }
+
+    .form-row { display: flex; gap: 12px; }
+    .form-row .form-field { flex: 1; }
+
+    .join-submit {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 4px;
+    }
+    .join-submit:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    .form-disclaimer {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 8px;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      z-index: 999;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      max-width: 420px;
+      width: 100%;
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+    .modal-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .modal-venue-name {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { color: var(--text); border-color: var(--text-muted); }
+    .modal { position: relative; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-logo { font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
+    .footer-copy { font-size: 12px; color: var(--text-dim); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      .nav-tagline { display: none; }
+      .hero { padding: 100px 20px 60px; }
+      .section { padding: 60px 20px; }
+      .venue-card { width: 270px; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div>
+    <div class="logo">RENDVO</div>
+    <div class="nav-tagline">Plan is the first move</div>
+  </div>
+  <button class="nav-sign-in" onclick="openModal(null, 'Sign In')">Sign in</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-eyebrow">QR Date Experience</div>
+  <h1 class="hero-title">Find your<br/><em>date night.</em></h1>
+  <p class="hero-sub">Real plans. Real people. Same time. Same mind. Scan, pick a venue, and show up.</p>
+  <div class="hero-cta">
+    <button class="btn-primary" onclick="document.getElementById('venues').scrollIntoView({behavior:'smooth'})">See the plans</button>
+    <button class="btn-ghost" onclick="document.getElementById('join').scrollIntoView({behavior:'smooth'})">Join the plan</button>
+  </div>
+  <div class="scroll-hint">
+    <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+      <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Scroll
+  </div>
+</section>
+
+<!-- VENUES -->
+<section class="section" id="venues">
+  <div class="section-label">This Week's Plans</div>
+  <h2 class="section-title">Pick your vibe.</h2>
+  <p class="section-sub">Swipe through curated date plans — each one a real place, a real time.</p>
+
+  <div class="venues-wrapper" id="venuesWrapper">
+    <div class="venues-track" id="venuesTrack">
+
+      <!-- VENUE 1 -->
+      <div class="venue-card">
+        <div class="venue-img-placeholder" style="background: #1a1510;">
+          <svg viewBox="0 0 300 180" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:180px">
+            <rect width="300" height="180" fill="#1a1510"/>
+            <circle cx="240" cy="60" r="34" fill="#c93c1e" opacity="0.85"/>
+            <rect x="0" y="120" width="300" height="60" fill="#0d0d0d"/>
+            <path d="M10 120 Q30 90 50 120 Q70 90 90 120 Q110 80 130 120 Q150 95 170 120 Q190 85 210 120 Q230 90 250 120 Q270 95 290 120 L300 120 L300 180 L0 180Z" fill="#111"/>
+            <!-- tree silhouettes -->
+            <ellipse cx="60" cy="105" rx="18" ry="24" fill="#0f0f0f"/>
+            <rect x="57" y="120" width="6" height="16" fill="#0a0a0a"/>
+            <ellipse cx="230" cy="100" rx="14" ry="20" fill="#0f0f0f"/>
+            <rect x="227" y="114" width="6" height="20" fill="#0a0a0a"/>
+            <!-- couple silhouette -->
+            <ellipse cx="148" cy="108" rx="6" ry="7" fill="#222"/>
+            <ellipse cx="160" cy="109" rx="5" ry="6" fill="#222"/>
+            <path d="M142 115 Q148 130 154 115" fill="#222"/>
+            <path d="M155 116 Q160 130 165 116" fill="#222"/>
+          </svg>
+          <div class="venue-tag">Outdoors</div>
+          <button class="edit-btn" onclick="toggleEdit(this, 0)">Edit</button>
+        </div>
+        <div class="venue-body">
+          <div class="venue-name" id="name-0" contenteditable="false" spellcheck="false">Hike Primrose Hill &amp; coffee after</div>
+          <div class="venue-meta">
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="2" width="11" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h11M4 1v2M9 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <input class="meta-editable" id="date-0" value="Sat, 12 Apr · 10:00 AM" readonly />
+            </div>
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1C4.3 1 2.5 2.8 2.5 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="6.5" cy="5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+              <input class="meta-editable" id="location-0" value="Primrose Hill, NW1" readonly />
+            </div>
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 4v2.5l2 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <span class="spots-badge" id="spots-0">● 3 spots left</span>
+            </div>
+          </div>
+          <div class="venue-footer">
+            <button class="want-in-btn" onclick="openModal(0)">Want in?</button>
+            <div class="arrow-icon">
+              <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M2.5 9.5l7-7M9.5 9V2.5H3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VENUE 2 -->
+      <div class="venue-card">
+        <div class="venue-img-placeholder" style="background: #120d0a;">
+          <svg viewBox="0 0 300 180" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:180px">
+            <rect width="300" height="180" fill="#120d08"/>
+            <!-- candlelight glow -->
+            <radialGradient id="g2a" cx="50%" cy="70%" r="50%">
+              <stop offset="0%" stop-color="#c93c1e" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#120d08" stop-opacity="0"/>
+            </radialGradient>
+            <rect width="300" height="180" fill="url(#g2a)"/>
+            <!-- candles -->
+            <rect x="130" y="110" width="8" height="30" fill="#3a2a1a"/>
+            <ellipse cx="134" cy="108" rx="4" ry="6" fill="#f5a623" opacity="0.9"/>
+            <ellipse cx="134" cy="105" rx="2" ry="3" fill="#fff" opacity="0.8"/>
+            <rect x="160" y="115" width="6" height="25" fill="#3a2a1a"/>
+            <ellipse cx="163" cy="113" rx="3" ry="5" fill="#f5a623" opacity="0.9"/>
+            <!-- wine glasses -->
+            <path d="M100 140 Q100 120 110 115 Q120 110 120 100 L112 100 L110 90 L130 90 L128 100 L120 100 Q120 110 130 115 Q140 120 140 140Z" fill="#2a1f1a" stroke="#4a3a2a" stroke-width="0.5"/>
+            <path d="M170 140 Q170 122 178 117 Q186 112 186 103 L179 103 L177 94 L195 94 L193 103 L186 103 Q186 112 194 117 Q202 122 202 140Z" fill="#2a1f1a" stroke="#4a3a2a" stroke-width="0.5"/>
+          </svg>
+          <div class="venue-tag">Cosy</div>
+          <button class="edit-btn" onclick="toggleEdit(this, 1)">Edit</button>
+        </div>
+        <div class="venue-body">
+          <div class="venue-name" id="name-1" contenteditable="false" spellcheck="false">Wine, candles, low effort, high connection.</div>
+          <div class="venue-meta">
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="2" width="11" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h11M4 1v2M9 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <input class="meta-editable" id="date-1" value="Fri, 11 Apr · 7:00 PM" readonly />
+            </div>
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1C4.3 1 2.5 2.8 2.5 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="6.5" cy="5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+              <input class="meta-editable" id="location-1" value="Notting Hill" readonly />
+            </div>
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 4v2.5l2 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <span class="spots-badge" id="spots-1">● 4 spots left</span>
+            </div>
+          </div>
+          <div class="venue-footer">
+            <button class="want-in-btn" onclick="openModal(1)">Want in?</button>
+            <div class="arrow-icon">
+              <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M2.5 9.5l7-7M9.5 9V2.5H3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VENUE 3 -->
+      <div class="venue-card">
+        <div class="venue-img-placeholder" style="background: #0e0e12;">
+          <svg viewBox="0 0 300 180" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:180px">
+            <rect width="300" height="180" fill="#0e0e12"/>
+            <!-- gallery hall -->
+            <rect x="0" y="0" width="300" height="180" fill="#111118"/>
+            <!-- floor perspective -->
+            <path d="M0 180 L150 100 L300 180Z" fill="#0d0d10"/>
+            <!-- ceiling light -->
+            <ellipse cx="150" cy="30" rx="60" ry="20" fill="#1a1a25" stroke="#2a2a38" stroke-width="0.5"/>
+            <line x1="150" y1="0" x2="150" y2="30" stroke="#2a2a38" stroke-width="1"/>
+            <radialGradient id="g3a" cx="50%" cy="20%" r="60%">
+              <stop offset="0%" stop-color="#6060c0" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#0e0e12" stop-opacity="0"/>
+            </radialGradient>
+            <rect width="300" height="180" fill="url(#g3a)"/>
+            <!-- artwork frames -->
+            <rect x="30" y="40" width="55" height="75" rx="2" fill="#1c1c24" stroke="#2a2a38" stroke-width="1"/>
+            <rect x="34" y="44" width="47" height="67" rx="1" fill="#c93c1e" opacity="0.3"/>
+            <rect x="215" y="45" width="50" height="68" rx="2" fill="#1c1c24" stroke="#2a2a38" stroke-width="1"/>
+            <rect x="219" y="49" width="42" height="60" rx="1" fill="#4a6fa5" opacity="0.25"/>
+            <!-- center large frame -->
+            <rect x="110" y="30" width="80" height="85" rx="2" fill="#1e1e28" stroke="#3a3a4a" stroke-width="1.5"/>
+            <rect x="115" y="35" width="70" height="75" rx="1" fill="#2a1510" opacity="0.8"/>
+            <!-- silhouette figures -->
+            <ellipse cx="148" cy="148" rx="6" ry="7" fill="#1a1a20"/>
+            <rect x="144" y="155" width="8" height="18" rx="3" fill="#1a1a20"/>
+            <ellipse cx="165" cy="149" rx="5" ry="6" fill="#1a1a20"/>
+            <rect x="161" y="155" width="8" height="18" rx="3" fill="#1a1a20"/>
+          </svg>
+          <div class="venue-tag">Curious</div>
+          <button class="edit-btn" onclick="toggleEdit(this, 2)">Edit</button>
+        </div>
+        <div class="venue-body">
+          <div class="venue-name" id="name-2" contenteditable="false" spellcheck="false">Museum first, judge the art together.</div>
+          <div class="venue-meta">
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="2" width="11" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h11M4 1v2M9 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <input class="meta-editable" id="date-2" value="Sun, 13 Apr · 11:00 AM" readonly />
+            </div>
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1C4.3 1 2.5 2.8 2.5 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="6.5" cy="5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+              <input class="meta-editable" id="location-2" value="Tate Modern, SE1" readonly />
+            </div>
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 4v2.5l2 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <span class="spots-badge" id="spots-2">● 5 spots left</span>
+            </div>
+          </div>
+          <div class="venue-footer">
+            <button class="want-in-btn" onclick="openModal(2)">Want in?</button>
+            <div class="arrow-icon">
+              <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M2.5 9.5l7-7M9.5 9V2.5H3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VENUE 4 -->
+      <div class="venue-card">
+        <div class="venue-img-placeholder" style="background: #0a100e;">
+          <svg viewBox="0 0 300 180" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:180px">
+            <rect width="300" height="180" fill="#0a100e"/>
+            <circle cx="150" cy="56" r="38" fill="#c93c1e" opacity="0.9"/>
+            <!-- London skyline silhouette -->
+            <rect x="0" y="120" width="300" height="60" fill="#050a08"/>
+            <path d="M0 120 L20 100 L35 120 L50 85 L60 120 L75 75 L80 65 L85 75 L90 120 L110 100 L120 120 L135 90 L145 120 L155 95 L160 120 L175 105 L185 75 L190 70 L195 75 L200 120 L220 100 L235 120 L250 90 L260 120 L280 105 L300 120 L300 180 L0 180Z" fill="#080e0c"/>
+            <!-- subtle reflection -->
+            <radialGradient id="g4a" cx="50%" cy="30%" r="50%">
+              <stop offset="0%" stop-color="#c93c1e" stop-opacity="0.06"/>
+              <stop offset="100%" stop-color="#0a100e" stop-opacity="0"/>
+            </radialGradient>
+            <rect width="300" height="180" fill="url(#g4a)"/>
+          </svg>
+          <div class="venue-tag">Spontaneous</div>
+          <button class="edit-btn" onclick="toggleEdit(this, 3)">Edit</button>
+        </div>
+        <div class="venue-body">
+          <div class="venue-name" id="name-3" contenteditable="false" spellcheck="false">Plan Roulette — surprise us both.</div>
+          <div class="venue-meta">
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="2" width="11" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h11M4 1v2M9 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <input class="meta-editable" id="date-3" value="Sat, 19 Apr · 6:30 PM" readonly />
+            </div>
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1C4.3 1 2.5 2.8 2.5 5c0 3 4 7 4 7s4-4 4-7c0-2.2-1.8-4-4-4z" stroke="currentColor" stroke-width="1.2"/><circle cx="6.5" cy="5" r="1.5" stroke="currentColor" stroke-width="1.2"/></svg>
+              <input class="meta-editable" id="location-3" value="South Bank, SE1" readonly />
+            </div>
+            <div class="meta-row">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 4v2.5l2 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <span class="spots-badge" id="spots-3">● 2 spots left</span>
+            </div>
+          </div>
+          <div class="venue-footer">
+            <button class="want-in-btn" onclick="openModal(3)">Want in?</button>
+            <div class="arrow-icon">
+              <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M2.5 9.5l7-7M9.5 9V2.5H3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="section-label">How it works</div>
+  <h2 class="section-title">No swiping. No waiting.</h2>
+  <p class="section-sub">Three moves from coffee cup to date night.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01 — SCAN</div>
+      <div class="step-title">Find the cup.</div>
+      <p class="step-desc">Spot the Rendvo cup at your local coffee shop. Scan the QR and see this week's curated date plans.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02 — PICK</div>
+      <div class="step-title">Choose a plan.</div>
+      <p class="step-desc">Browse real venues, real times, real vibes. Pick the one that matches your energy and tap "Want in?"</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03 — SHOW UP</div>
+      <div class="step-title">Meet someone real.</div>
+      <p class="step-desc">No endless texting. You're both at the same place, at the same time, with the same idea. The plan is made.</p>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN THE PLAN -->
+<div class="join-section" id="join">
+  <div class="join-inner">
+    <span class="section-label">Join the plan</span>
+    <h2 class="join-title">Want in?</h2>
+    <p class="join-sub">Sign up to see who else is on your plan — and get early access when Rendvo launches in your city.</p>
+    <form class="join-form" onsubmit="handleJoin(event)">
+      <div class="form-row">
+        <input class="form-field" type="text" placeholder="First name" required />
+        <input class="form-field" type="text" placeholder="Last name" />
+      </div>
+      <input class="form-field" type="email" placeholder="Email address" required />
+      <input class="form-field" type="text" placeholder="Your city" />
+      <button type="submit" class="join-submit">Join the plan →</button>
+      <p class="form-disclaimer">No spam. One email when Rendvo comes to you.</p>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">RENDVO</div>
+  <div class="footer-copy">© 2025 Rendvo. All rights reserved.</div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <div class="modal-eyebrow">You're one step away</div>
+    <h3 class="modal-title" id="modalTitle">Want in?</h3>
+    <p class="modal-venue-name" id="modalVenueName"></p>
+    <form class="join-form" onsubmit="handleVenueJoin(event)">
+      <input class="form-field" type="text" placeholder="First name" required />
+      <input class="form-field" type="email" placeholder="Email address" required />
+      <button type="submit" class="join-submit">Confirm my spot →</button>
+    </form>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  <span id="toastMsg">You're on the plan.</span>
+</div>
+
+<script>
+  // Drag-to-scroll on venues
+  const wrapper = document.getElementById('venuesWrapper');
+  let isDragging = false, startX, scrollLeft;
+  wrapper.addEventListener('mousedown', e => {
+    isDragging = true;
+    startX = e.pageX - wrapper.offsetLeft;
+    scrollLeft = wrapper.scrollLeft;
+  });
+  document.addEventListener('mouseup', () => isDragging = false);
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - wrapper.offsetLeft;
+    wrapper.scrollLeft = scrollLeft - (x - startX) * 1.2;
+  });
+
+  // Edit toggle
+  function toggleEdit(btn, idx) {
+    const name = document.getElementById('name-' + idx);
+    const dateInp = document.getElementById('date-' + idx);
+    const locInp = document.getElementById('location-' + idx);
+    const isEditing = name.contentEditable === 'true';
+
+    if (isEditing) {
+      name.contentEditable = 'false';
+      dateInp.readOnly = true;
+      locInp.readOnly = true;
+      btn.textContent = 'Edit';
+      showToast('Changes saved.');
+    } else {
+      name.contentEditable = 'true';
+      dateInp.readOnly = false;
+      locInp.readOnly = false;
+      btn.textContent = 'Done';
+      name.focus();
+    }
+  }
+
+  // Modal
+  const venueNames = [
+    'Hike Primrose Hill & coffee after',
+    'Wine, candles, low effort, high connection.',
+    'Museum first, judge the art together.',
+    'Plan Roulette — surprise us both.'
+  ];
+
+  function openModal(idx, customTitle) {
+    const overlay = document.getElementById('modalOverlay');
+    const title = document.getElementById('modalTitle');
+    const venueName = document.getElementById('modalVenueName');
+    if (idx !== null) {
+      title.textContent = 'Want in?';
+      const liveEl = document.getElementById('name-' + idx);
+      venueName.textContent = liveEl ? liveEl.textContent : venueNames[idx];
+    } else {
+      title.textContent = customTitle || 'Sign In';
+      venueName.textContent = '';
+    }
+    overlay.classList.add('open');
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+  }
+  function closeModalDirect() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModalDirect();
+  });
+
+  // Forms
+  function handleJoin(e) {
+    e.preventDefault();
+    showToast("You're on the list. We'll be in touch.");
+    e.target.reset();
+  }
+
+  function handleVenueJoin(e) {
+    e.preventDefault();
+    closeModalDirect();
+    showToast("Spot confirmed. See you there.");
+    e.target.reset();
+  }
+
+  // Toast
+  let toastTimer;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+  }
+</script>
+</body>
+</html>
