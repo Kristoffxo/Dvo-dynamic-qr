@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RENDVO — Plan is the First Move</title>
+  <meta name="description" content="Real plans. Real people. Same time. Same mind. Pick a curated date plan and show up." />
+  <meta name="theme-color" content="#0b0b0b" />
+  <meta property="og:title" content="RENDVO — Find your date" />
+  <meta property="og:description" content="Real plans. Real people. Same time. Same mind." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0b0b'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%23c93c1e'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -236,9 +245,18 @@
       padding: 4px 2px 8px;
     }
 
+    .venues-wrapper { scroll-snap-type: x mandatory; }
+    button:focus-visible, input:focus-visible, [contenteditable]:focus-visible {
+      outline: 2px solid var(--accent); outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+
     .venue-card {
       width: 300px;
       flex-shrink: 0;
+      scroll-snap-align: start;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -914,13 +932,13 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">RENDVO</div>
-  <div class="footer-copy">© 2025 Rendvo. All rights reserved.</div>
+  <div class="footer-copy">© <span id="year"></span> Rendvo. All rights reserved.</div>
 </footer>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
-    <button class="modal-close" onclick="closeModalDirect()">×</button>
+    <button class="modal-close" onclick="closeModalDirect()" aria-label="Close">×</button>
     <div class="modal-eyebrow">You're one step away</div>
     <h3 class="modal-title" id="modalTitle">Want in?</h3>
     <p class="modal-venue-name" id="modalVenueName"></p>
@@ -967,6 +985,7 @@
       dateInp.readOnly = true;
       locInp.readOnly = true;
       btn.textContent = 'Edit';
+      saveVenue(idx);
       showToast('Changes saved.');
     } else {
       name.contentEditable = 'true';
@@ -1024,6 +1043,28 @@
     showToast("Spot confirmed. See you there.");
     e.target.reset();
   }
+
+  function saveVenue(idx) {
+    try {
+      localStorage.setItem('rendvo-venue-' + idx, JSON.stringify({
+        name: document.getElementById('name-' + idx).textContent,
+        date: document.getElementById('date-' + idx).value,
+        location: document.getElementById('location-' + idx).value
+      }));
+    } catch (_) {}
+  }
+
+  for (let i = 0; i < 4; i++) {
+    try {
+      const saved = JSON.parse(localStorage.getItem('rendvo-venue-' + i));
+      if (!saved) continue;
+      document.getElementById('name-' + i).textContent = saved.name;
+      document.getElementById('date-' + i).value = saved.date;
+      document.getElementById('location-' + i).value = saved.location;
+    } catch (_) {}
+  }
+
+  document.getElementById('year').textContent = new Date().getFullYear();
 
   // Toast
   let toastTimer;
