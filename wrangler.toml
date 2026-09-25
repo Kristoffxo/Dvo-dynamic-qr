@@ -1,3 +1,6 @@
-name = "rendvo-qr"
-pages_build_output_dir = "."
+name = "dvo-dynamic-qr"
 compatibility_date = "2026-09-01"
+
+[assets]
+directory = "./public"
+not_found_handling = "single-page-application"
